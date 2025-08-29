@@ -17,7 +17,8 @@ This project is designed to be compatible with specific versions of Python for o
 
 ### Supported Python Version
 
-- **Python 3.11.3**
+- **Python 3.11.3** (recommended)
+- **Minimum**: Python 3.10+
 
 > ❗️ For the best experience and performance, it is recommended to use the version mentioned above.
 
@@ -57,33 +58,35 @@ pyenv install 3.11.3
   <br>
   - **Clone the repository**:
   Get the project source code from GitHub:
-  
+
   ```bash
-  git clone https://github.com/FOSS-Community/paste.py.git
+  git clone https://github.com/thepiloter/paste.py.git
   ```
-  
+
   - **Navigate to the Project Directory**:
-  
+
   ```bash
   cd paste.py
   ```
 
   - **Configure Environment**:
   Create environment file from the example:
-  
+
   ```bash
   cp .env.example .env
   ```
-  
+
   The `.env.example` file contains default values suitable for local development. You can use these defaults or modify them as needed.
 
   - **Run the project using docker-compose**:
-  
+
   ```bash
   docker-compose up -d
   ```
-  
+
   The application will be available at `http://localhost:8082`
+
+  **Note**: This setup now includes MinIO service for complete file storage functionality.
 
 ## Local setup 🛠️ without Docker 🐳
 
@@ -98,7 +101,7 @@ pyenv install 3.11.3
   Get the project source code from GitHub:
 
   ```bash
-  git clone https://github.com/FOSS-Community/paste.py.git
+  git clone https://github.com/thepiloter/paste.py.git
   ```
 
 - **Navigate to the Project Directory**:
@@ -149,10 +152,10 @@ Once you have your server up and running, you can send requests to it from anoth
 Here are a couple of `GET` requests you can make using [curl](https://curl.se/):
 
 ```bash
-curl http://0.0.0.0:8080/health
+curl http://localhost:8082/health
 ```
 
-> These endpoints typically return the health status or readiness of the server, helping in diagnostics and monitoring.
+> This endpoint returns the health status of the server. Note that when running via docker-compose, the application is available on port 8082.
 
 # 🗒️ How to contribute
 
@@ -162,9 +165,9 @@ curl http://0.0.0.0:8080/health
 
 <hr>
 
-## Uasge:
+## Usage:
 
-### Uisng CLI
+### Using CLI
 
 > cURL is required to use the CLI.
 
