@@ -81,21 +81,36 @@ docker compose down
 
 ## Development Setup (Without Docker)
 
-If you prefer to run the application directly:
+If you prefer to run the application directly, you'll need additional services:
 
 ### Prerequisites
 - Python 3.10+ (3.11.3 recommended)
 - [PDM](https://pdm.fming.dev/latest/)
+- Running MinIO server (for file storage)
+- SQLite (included with Python)
 
 ### Setup
 ```bash
 git clone https://github.com/thepiloter/paste.py.git
 cd paste.py
+
+# Configure environment
+cp .env.example .env
+# Edit .env to update MINIO_CLIENT_LINK and BASE_URL for your setup
+
+# Install dependencies
 pdm install
+
+# Run database migrations
+pdm run migrate
+
+# Start the application
 pdm run start
 ```
 
 The application will be available at http://localhost:8080
+
+**Note**: You'll need to run MinIO separately or update the `.env` file to point to an existing S3-compatible storage service.
 
 ## Contributing
 
