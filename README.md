@@ -68,11 +68,22 @@ pyenv install 3.11.3
   cd paste.py
   ```
 
+  - **Configure Environment**:
+  Create environment file from the example:
+  
+  ```bash
+  cp .env.example .env
+  ```
+  
+  The `.env.example` file contains default values suitable for local development. You can use these defaults or modify them as needed.
+
   - **Run the project using docker-compose**:
   
   ```bash
-  docker-compose up
+  docker-compose up -d
   ```
+  
+  The application will be available at `http://localhost:8082`
 
 ## Local setup 🛠️ without Docker 🐳
 
