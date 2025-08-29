@@ -1,198 +1,106 @@
 # paste.py 🐍
 
-<a href="https://kuma.fosscu.org/status/pastepy" target="_blank"><img src="https://badgen.net/badge/status/paste.py/green?icon=lgtm" alt=""></a>
+paste.py is a modern pastebin service written in Python using FastAPI. It allows users to share code snippets and text files through a web interface or REST API, with support for syntax highlighting, file uploads, and expiration times.
 
-<hr>
+## Prerequisites
 
-paste.py 🐍 - A pastebin written in python.
+- [Git](https://git-scm.com/downloads)
+- [Docker Desktop](https://docs.docker.com/desktop/)
 
-# 🤔 Pre-requisites
+## Local Setup
 
-- `python3`
-- `pdm`
-
-## 🐍 Python Version Support
-
-This project is designed to be compatible with specific versions of Python for optimal performance and stability.
-
-### Supported Python Version
-
-- **Python 3.11.3** (recommended)
-- **Minimum**: Python 3.10+
-
-> ❗️ For the best experience and performance, it is recommended to use the version mentioned above.
-
-Before diving into the project, ensure that you have the correct Python version installed. To check the version of Python you currently have, execute the following command in your terminal:
-
+### Step 1: Clone and Setup
+Clone the repository and navigate to project directory:
 ```bash
-python --version
+git clone https://github.com/thepiloter/paste.py.git
+cd paste.py
 ```
 
-### 🐍 Installing Python 3.11.3 with `pyenv`
+### Step 2: Configure Environment
+Create environment file from example:
+```bash
+cp .env.example .env
+```
+*The .env.example file already contains working default values suitable for local development.*
 
-**Protip:** Managing multiple Python versions is a breeze with [pyenv](https://github.com/pyenv/pyenv). It allows you to seamlessly switch between different Python versions without the need to reinstall them.
+### Step 3: Start Services
+Run the application using Docker Compose:
+```bash
+docker-compose up -d
+```
+*The first startup may take a few minutes as it downloads images and sets up the database.*
 
-If you haven't installed `pyenv` yet, follow their [official guide](https://github.com/pyenv/pyenv) to set it up.
+### Step 4: Access Application
+Open your browser and navigate to: http://localhost:8082
 
-Once you have `pyenv` ready, install the recommended Python version by running:
+The application provides:
+- **Web Interface**: http://localhost:8082/web (paste creation form)
+- **API Documentation**: http://localhost:8082/docs (interactive API docs)
+
+## Usage
+
+### Web Interface
+Navigate to http://localhost:8082/web to create and share pastes through the browser interface.
+
+### API Usage
+Use curl or any HTTP client to interact with the REST API:
 
 ```bash
-pyenv install 3.11.3
+# Create a paste
+curl -X POST "http://localhost:8082/api/paste" \
+     -H "Content-Type: application/json" \
+     -d '{"content": "Hello World", "extension": "txt"}'
+
+# Upload a file
+curl -X POST -F "file=@example.txt" http://localhost:8082/file
 ```
 
-> When you navigate to this project's directory in the future, `pyenv` will automatically select the recommended Python version, thanks to the `.python-version` file in the project root.
-
-# 📦 Setup
-
-## Local setup 🛠️ with Docker 🐳
-
-- **Installing and running**:
-  Before you begin, ensure you have docker installed. If not, refer to the [official documentation](https://docs.docker.com/engine/install/) to install docker.
-  ```bash
-  docker pull mrsunglasses/pastepy
-  docker run -d -p 8080:8080 --name pastepyprod mrsunglasses/pastepy
-  ```
-
-- **Using docker-compose**:
-  You can also use docker-compose to run the project locally by running the following command:
-  <br>
-  - **Clone the repository**:
-  Get the project source code from GitHub:
-
-  ```bash
-  git clone https://github.com/thepiloter/paste.py.git
-  ```
-
-  - **Navigate to the Project Directory**:
-
-  ```bash
-  cd paste.py
-  ```
-
-  - **Configure Environment**:
-  Create environment file from the example:
-
-  ```bash
-  cp .env.example .env
-  ```
-
-  The `.env.example` file contains default values suitable for local development. You can use these defaults or modify them as needed.
-
-  - **Run the project using docker-compose**:
-
-  ```bash
-  docker-compose up -d
-  ```
-
-  The application will be available at `http://localhost:8082`
-
-  **Note**: This setup now includes MinIO service for complete file storage functionality.
-
-## Local setup 🛠️ without Docker 🐳
-
-### Setting Up the Project with PDM
-
-[PDM (Python Development Master)](https://pdm.fming.dev/latest/) is utilized for dependency management in this project. To set up and run the project:
-
-- **Installing PDM**:
-  Before you begin, ensure you have PDM installed. If not, refer to the [official documentation](https://pdm.fming.dev/latest/) to install PDM.
-
-- **Clone the Repository**:
-  Get the project source code from GitHub:
-
-  ```bash
-  git clone https://github.com/thepiloter/paste.py.git
-  ```
-
-- **Navigate to the Project Directory**:
-
-  ```bash
-  cd paste.py
-  ```
-
-- **Install Dependencies**:
-  Use PDM to install the project's dependencies:
-  ```bash
-  pdm install
-  ```
-
-* **Start the Project**:
-  Use PDM to run the project:
-  ```bash
-  pdm run start
-  ```
-  - You can also use `pdm run dev` to start the dev server.
-
-## Setting Up and Testing the Project
-
-To ensure the code quality and functionality of the project, follow the steps below:
-
-### Installing Git Hooks with `pre-commit`
-
-Before making any commits, it's essential to ensure that your code meets the quality standards. This project utilizes `pre-commit` hooks to automatically check your changes before any commit.
-
-Install the pre-commit hooks with the following command:
+### Management Commands
+Run application commands using docker compose:
 
 ```bash
-pre-commit install
+# Run database migrations
+docker compose exec myapp pdm run migrate
+
+# Run tests
+docker compose exec myapp pdm run test
 ```
 
-### Running Tests
-
-To ensure the project's functionality, you should run all the provided tests. Execute the following command to run the tests:
+## Container Management
 
 ```bash
-pdm run test
+# Stop containers (data persists)
+docker compose stop
+
+# Start containers
+docker compose start
+
+# Stop and remove containers
+docker compose down
 ```
 
-### Testing the Running Server
+## Development Setup (Without Docker)
 
-Once you have your server up and running, you can send requests to it from another terminal to test its responsiveness and functionality.
+If you prefer to run the application directly:
 
-Here are a couple of `GET` requests you can make using [curl](https://curl.se/):
+### Prerequisites
+- Python 3.10+ (3.11.3 recommended)
+- [PDM](https://pdm.fming.dev/latest/)
 
+### Setup
 ```bash
-curl http://localhost:8082/health
+git clone https://github.com/thepiloter/paste.py.git
+cd paste.py
+pdm install
+pdm run start
 ```
 
-> This endpoint returns the health status of the server. Note that when running via docker-compose, the application is available on port 8082.
+The application will be available at http://localhost:8080
 
-# 🗒️ How to contribute
+## Contributing
 
-> ❗️Important: **Please read the [Code of Conduct](CODE_OF_CONDUCT.md) and go through [Contributing Guideline](CONTRIBUTING.md) before contributing to paste.py**
+Please read the [Code of Conduct](CODE_OF_CONDUCT.md) and [Contributing Guidelines](CONTRIBUTING.md) before contributing.
 
-- Feel free to open an issue for any clarifications or suggestions.
+## License
 
-<hr>
-
-## Usage:
-
-### Using CLI
-
-> cURL is required to use the CLI.
-
-- Paste a file named 'file.txt'
-
-```bash
-curl -X POST -F "file=@file.txt" https://paste.fosscu.org/file
-```
-
-- Paste from stdin
-
-```bash
-echo "Hello, world." | curl -X POST -F "file=@-" https://paste.fosscu.org/file
-```
-
-- Delete an existing paste
-
-```bash
-curl -X DELETE https://paste.fosscu.org/paste/<id>
-```
-
-### Using the web interface:
-
-[Go here](https://paste.fosscu.org/web)
-
-<hr>
-
-For info API usage and shell functions, see the [website](https://paste.fosscu.org).
+This project is licensed under the MIT License.
